@@ -1,7 +1,7 @@
 # Magic Invest
 #### _Your wallet, like magic!_
 
-![icon.png](assets%2Ficon%2Ficon.png)
+<img src="assets%2Ficon%2Ficon.png" alt="icon" width="200"/>
 
 ### Overview
 
