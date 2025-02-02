@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
-import '../../models/stock.model.dart';
+import '../../../config/di.dart';
+import '../../../domain/model/stock.model.dart';
 import '../../view_models/stock.view_model.dart';
 import '../edit_stock/edit_stock.view.dart';
 
 class StockDetailsView extends StatelessWidget {
   const StockDetailsView({super.key, required this.stock});
 
-  final Stock stock;
+  final StockModel stock;
 
   @override
   Widget build(BuildContext context) {
-    final viewModel = Provider.of<StockViewModel>(context);
+    final viewModel = getIt.get<StockViewModel>();
 
     return Scaffold(
       appBar: AppBar(

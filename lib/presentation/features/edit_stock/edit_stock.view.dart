@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
-import '../../models/stock.model.dart';
-import '../../shared/currency_utils.dart';
+import '../../../config/di.dart';
+import '../../../domain/model/stock.model.dart';
+import '../../../shared/currency_utils.dart';
 import '../../view_models/stock.view_model.dart';
 import '../../widgets/stock_form.widget.dart';
 
 class EditStockView extends StatefulWidget {
-  final Stock stock;
+  final StockModel stock;
 
   const EditStockView({super.key, required this.stock});
 
@@ -16,6 +16,8 @@ class EditStockView extends StatefulWidget {
 }
 
 class _EditStockViewState extends State<EditStockView> {
+  final viewModel = getIt.get<StockViewModel>();
+
   late TextEditingController _tickerController;
   late TextEditingController _dividendYieldController;
   late TextEditingController _investedAmountController;
@@ -41,10 +43,13 @@ class _EditStockViewState extends State<EditStockView> {
       currentPrice: parseCurrency(_currentPriceController.text),
     );
 
-    await Provider.of<StockViewModel>(context, listen: false)
-        .updateStock(widget.stock.key, updatedStock);
+    if (widget.stock.key != null) {
+      await viewModel.updateStock(widget.stock.key!, updatedStock);
+    } else {
+      print('Error $runtimeType -> Stock KEY IS NULL!');
+    }
 
-    Navigator.pop(context);
+    if (mounted) Navigator.pop(context);
   }
 
   @override
@@ -60,10 +65,10 @@ class _EditStockViewState extends State<EditStockView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Edit Stock'),
+        title: const Text('Edit Stock'),
         actions: [
           IconButton(
-            icon: Icon(Icons.save),
+            icon: const Icon(Icons.save),
             onPressed: _saveStock,
           ),
         ],

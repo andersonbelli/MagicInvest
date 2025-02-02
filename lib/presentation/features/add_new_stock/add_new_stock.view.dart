@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
-import '../../models/stock.model.dart';
-import '../../shared/currency_utils.dart';
+import '../../../config/di.dart';
+import '../../../domain/model/stock.model.dart';
+import '../../../shared/currency_utils.dart';
 import '../../view_models/stock.view_model.dart';
 import '../../widgets/stock_form.widget.dart';
 
@@ -14,6 +14,7 @@ class AddStockScreen extends StatefulWidget {
 }
 
 class _AddStockScreenState extends State<AddStockScreen> {
+  final viewModel = getIt.get<StockViewModel>();
   final _formKey = GlobalKey<FormState>();
 
   late TextEditingController _tickerController;
@@ -69,7 +70,7 @@ class _AddStockScreenState extends State<AddStockScreen> {
   void _submitForm() async {
     if (_formKey.currentState!.validate()) {
       try {
-        final newStock = Stock(
+        final newStock = StockModel(
           ticker: _tickerController.text.toUpperCase(),
           dividendYield:
               double.parse(_dividendYieldController.text.replaceAll(',', '.')),
@@ -77,9 +78,9 @@ class _AddStockScreenState extends State<AddStockScreen> {
           currentPrice: parseCurrency(_currentPriceController.text),
         );
 
-        await Provider.of<StockViewModel>(context, listen: false)
-            .addStock(newStock);
-        Navigator.pop(context);
+        await viewModel.addStock(newStock);
+
+        if (mounted) Navigator.pop(context);
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Erro ao adicionar a ação: $e')),

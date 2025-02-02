@@ -1,14 +1,9 @@
 import 'package:hive_flutter/hive_flutter.dart';
 
-import '../../models/stock.model.dart';
+import '../../entity/stock.entity.dart';
 
-class StockPersistence {
+class StockLocalDatasource {
   static const _stockBoxName = 'stocks';
-
-  static Future<void> initHive() async {
-    await Hive.initFlutter();
-    Hive.registerAdapter(StockAdapter());
-  }
 
   static Future<void> saveStocks(List<Stock> stocks) async {
     final box = await Hive.openBox<Stock>(_stockBoxName);

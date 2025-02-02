@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
-import '../../models/stock.model.dart';
+import '../../../config/di.dart';
+import '../../../domain/model/stock.model.dart';
 import '../../view_models/stock.view_model.dart';
 import '../add_new_stock/add_new_stock.view.dart';
 import '../details/stock_details.view.dart';
@@ -15,40 +15,39 @@ class HomeView extends StatefulWidget {
 }
 
 class _HomeViewState extends State<HomeView> {
+  final viewModel = getIt.get<StockViewModel>();
+
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      Provider.of<StockViewModel>(context, listen: false).loadStocks();
+      _loadStocks();
     });
   }
 
-  void _editStock(Stock stock) async {
+  void _editStock(StockModel stock) async {
     await Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => EditStockView(stock: stock),
       ),
     );
-    if (mounted) {
-      Provider.of<StockViewModel>(context, listen: false).loadStocks();
-    }
+
+    _loadStocks();
   }
 
   void _addNewStock() async {
     await Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => AddStockScreen(),
+        builder: (context) => const AddStockScreen(),
       ),
     );
 
-    if (mounted) {
-      Provider.of<StockViewModel>(context, listen: false).loadStocks();
-    }
+    _loadStocks();
   }
 
-  void _viewStockDetails(Stock stock) {
+  void _viewStockDetails(StockModel stock) {
     Navigator.push(
       context,
       MaterialPageRoute(
@@ -57,7 +56,7 @@ class _HomeViewState extends State<HomeView> {
     );
   }
 
-  void _deleteStock(Stock stock) async {
+  void _deleteStock(StockModel stock) async {
     final confirmDelete = await showDialog<bool>(
       context: context,
       builder: (context) {
@@ -79,8 +78,14 @@ class _HomeViewState extends State<HomeView> {
     );
 
     if (confirmDelete == true) {
-      await Provider.of<StockViewModel>(context, listen: false)
-          .deleteStock(stock);
+      await viewModel.deleteStock(stock);
+      _loadStocks();
+    }
+  }
+
+  void _loadStocks() async {
+    if (mounted) {
+      await viewModel.loadStocks();
     }
   }
 
@@ -96,30 +101,42 @@ class _HomeViewState extends State<HomeView> {
           ),
         ],
       ),
-      body: Consumer<StockViewModel>(
-        builder: (context, viewModel, child) {
+      body: ListenableBuilder(
+        listenable: viewModel,
+        builder: (context, widget) {
           return ListView.builder(
             itemCount: viewModel.stocks.length,
             itemBuilder: (context, index) {
               final stock = viewModel.stocks[index];
-              return ListTile(
-                title: Text(stock.ticker),
-                subtitle: Text(
-                    'Investido: R\$ ${stock.investedAmount.toStringAsFixed(2)}'),
-                trailing: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    IconButton(
-                      icon: const Icon(Icons.edit),
-                      onPressed: () => _editStock(stock),
+              return Column(
+                children: [
+                  ListTile(
+                    title: Text(stock.ticker),
+                    subtitle: Text(
+                      'Investido: R\$ ${stock.investedAmount.toStringAsFixed(2)}',
+                      style: Theme.of(context).textTheme.labelSmall,
                     ),
-                    IconButton(
-                      icon: const Icon(Icons.delete),
-                      onPressed: () => _deleteStock(stock),
+                    trailing: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        IconButton(
+                          icon: const Icon(Icons.edit),
+                          onPressed: () => _editStock(stock),
+                        ),
+                        IconButton(
+                          icon: const Icon(Icons.delete),
+                          onPressed: () => _deleteStock(stock),
+                        ),
+                        IconButton(
+                          icon: const Icon(Icons.arrow_forward_ios),
+                          onPressed: () => _viewStockDetails(stock),
+                        ),
+                      ],
                     ),
-                  ],
-                ),
-                onTap: () => _viewStockDetails(stock),
+                    onTap: () => _viewStockDetails(stock),
+                    style: ListTileStyle.drawer,
+                  ),
+                ],
               );
             },
           );

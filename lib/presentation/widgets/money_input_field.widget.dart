@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import '../shared/formatters/currency_formatter.dart';
+import '../../shared/formatters/currency_formatter.dart';
 
 class MoneyInputField extends StatelessWidget {
   const MoneyInputField(
@@ -14,7 +14,7 @@ class MoneyInputField extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextField(
       controller: controller,
-      keyboardType: TextInputType.numberWithOptions(decimal: true),
+      keyboardType: const TextInputType.numberWithOptions(decimal: true),
       inputFormatters: [
         FilteringTextInputFormatter.digitsOnly,
         CurrencyInputFormatter(),
