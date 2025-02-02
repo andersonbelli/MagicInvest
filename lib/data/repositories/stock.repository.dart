@@ -1,5 +1,3 @@
-import 'package:hive/hive.dart';
-
 import '../../domain/model/stock.model.dart';
 import '../data_sources/stock/stock.local_datasource.dart';
 import '../entity/stock.entity.dart';
@@ -24,7 +22,7 @@ class StockRepositoryImpl implements StockRepository {
   @override
   Future<List<StockModel>> loadStocks() async {
     try {
-      final box = await Hive.openBox<Stock>('stocks');
+      final box = await Stock.openStockHiveBox();
       final List<Stock> stocks = box.values.toList();
 
       return stocks.map((stock) => StockModel.fromEntity(stock)).toList();
@@ -38,7 +36,7 @@ class StockRepositoryImpl implements StockRepository {
   @override
   Future<void> addStock(StockModel stock) async {
     try {
-      final box = await Hive.openBox<Stock>('stocks');
+      final box = await Stock.openStockHiveBox();
 
       await box.add(
         Stock.fromModel(stock),
@@ -52,7 +50,7 @@ class StockRepositoryImpl implements StockRepository {
   @override
   Future<void> deleteStock(StockModel stock) async {
     try {
-      final box = await Hive.openBox<Stock>('stocks');
+      final box = await Stock.openStockHiveBox();
       await box.delete(stock.key);
     } catch (e) {
       print('Error deleting stock: $e');
@@ -62,7 +60,7 @@ class StockRepositoryImpl implements StockRepository {
   @override
   Future<void> updateStock(int stockKey, StockModel stock) async {
     try {
-      final box = await Hive.openBox<Stock>('stocks');
+      final box = await Stock.openStockHiveBox();
 
       if (box.containsKey(stockKey)) {
         await box.put(stockKey, Stock.fromModel(stock));

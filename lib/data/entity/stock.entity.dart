@@ -39,4 +39,6 @@ class Stock extends HiveObject {
         investedAmount: model.investedAmount,
         currentPrice: model.currentPrice,
       );
+
+  static openStockHiveBox() async => await Hive.openBox<Stock>('stocks');
 }
