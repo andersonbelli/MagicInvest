@@ -7,12 +7,15 @@ environment:
   sdk: ^3.6.1
 
 dependencies:
+  auto_injector: ^2.0.5
   flutter:
     sdk: flutter
+
   hive: ^2.2.3
   hive_flutter: ^1.1.0
   intl: ^0.20.2
-  provider: ^6.1.2
+  json_annotation: ^4.9.0
+  json_serializable: ^6.9.0
 
 dev_dependencies:
   flutter_test:
@@ -22,6 +25,8 @@ dev_dependencies:
   flutter_launcher_icons: ^0.14.3
   hive_generator: ^2.0.1
   build_runner: ^2.4.14
+  freezed: ^2.5.7
+  freezed_annotation: ^2.4.4
 
 flutter:
   uses-material-design: true
