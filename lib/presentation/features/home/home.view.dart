@@ -23,6 +23,24 @@ class _HomeViewState extends State<HomeView> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _loadStocks();
     });
+
+    viewModel.errorMessageStream.listen(_listenable);
+  }
+
+  _listenable(String? errorMessage) {
+    if (errorMessage != null && errorMessage.isNotEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(errorMessage),
+          backgroundColor: Colors.redAccent,
+          action: SnackBarAction(
+            label: 'Retry',
+            textColor: Colors.white,
+            onPressed: () => Navigator.pop(context),
+          ),
+        ),
+      );
+    }
   }
 
   void _editStock(StockModel stock) async {
