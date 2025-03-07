@@ -1,3 +1,6 @@
+import 'dart:developer';
+
+import 'package:abelliz_essentials/widgets/dialogs/message_dialog.widget.dart';
 import 'package:flutter/material.dart';
 
 import '../../../config/di.dart';
@@ -27,12 +30,9 @@ class _EditStockViewState extends State<EditStockView> {
   void initState() {
     super.initState();
     _tickerController = TextEditingController(text: widget.stock.ticker);
-    _dividendYieldController =
-        TextEditingController(text: widget.stock.dividendYield.toString());
-    _investedAmountController =
-        TextEditingController(text: widget.stock.investedAmount.toString());
-    _currentPriceController =
-        TextEditingController(text: widget.stock.currentPrice.toString());
+    _dividendYieldController = TextEditingController(text: widget.stock.dividendYield.toString());
+    _investedAmountController = TextEditingController(text: widget.stock.investedAmount.toString());
+    _currentPriceController = TextEditingController(text: widget.stock.currentPrice.toString());
   }
 
   void _saveStock() async {
@@ -46,7 +46,11 @@ class _EditStockViewState extends State<EditStockView> {
     if (widget.stock.key != null) {
       await viewModel.updateStock(widget.stock.key!, updatedStock);
     } else {
-      print('Error $runtimeType -> Stock KEY IS NULL!');
+      showMessageDialogAbelliz(
+        context,
+        'Ops, nao esqueca de adicionar o ticker a ser salvo',
+      );
+      log('Error $runtimeType -> Stock KEY IS NULL!');
     }
 
     if (mounted) Navigator.pop(context);

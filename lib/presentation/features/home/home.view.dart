@@ -1,3 +1,4 @@
+import 'package:abelliz_essentials/abelliz_essentials.dart';
 import 'package:flutter/material.dart';
 
 import '../../../config/di.dart';
@@ -74,32 +75,30 @@ class _HomeViewState extends State<HomeView> {
     );
   }
 
-  void _deleteStock(StockModel stock) async {
-    final confirmDelete = await showDialog<bool>(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: const Text('Confirmar Exclusão'),
-          content: const Text('Você tem certeza que deseja excluir esta ação?'),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(false),
-              child: const Text('Cancelar'),
+  void _deleteStock(StockModel stock) => showMessageDialogAbelliz(
+        context,
+        'Você tem certeza que deseja excluir esta ação?',
+        title: const Text('Confirmar Exclusão'),
+        actionButtons: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            style: ButtonStyle(
+              foregroundColor: WidgetStatePropertyAll<Color>(
+                Theme.of(context).colorScheme.tertiary,
+              ),
             ),
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(true),
-              child: const Text('Excluir'),
-            ),
-          ],
-        );
-      },
-    );
-
-    if (confirmDelete == true) {
-      await viewModel.deleteStock(stock);
-      _loadStocks();
-    }
-  }
+            child: const Text('Cancelar'),
+          ),
+          TextButton(
+            onPressed: () async {
+              await viewModel.deleteStock(stock);
+              _loadStocks();
+              if (mounted) Navigator.of(context).pop(true);
+            },
+            child: const Text('Excluir'),
+          ),
+        ],
+      );
 
   void _loadStocks() async {
     if (mounted) {
