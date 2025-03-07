@@ -4,7 +4,9 @@ import 'package:intl/intl.dart';
 class CurrencyInputFormatter extends TextInputFormatter {
   @override
   TextEditingValue formatEditUpdate(
-      TextEditingValue oldValue, TextEditingValue newValue) {
+    TextEditingValue oldValue,
+    TextEditingValue newValue,
+  ) {
     String newText = newValue.text;
 
     // Remove any non-digit characters
@@ -12,14 +14,13 @@ class CurrencyInputFormatter extends TextInputFormatter {
 
     // If the input is empty, return empty value
     if (newText.isEmpty) {
-      return TextEditingValue(text: 'R\$ 0.00');
+      return const TextEditingValue(text: r'R$ 0.00');
     }
 
     // Convert to double and format as currency
-    double value = double.tryParse(newText) ?? 0.0;
-    final formatter =
-        NumberFormat.simpleCurrency(locale: "pt_BR", decimalDigits: 2);
-    String formattedText = formatter.format(value / 100);
+    final double value = double.tryParse(newText) ?? 0.0;
+    final formatter = NumberFormat.simpleCurrency(locale: 'pt_BR', decimalDigits: 2);
+    final String formattedText = formatter.format(value / 100);
 
     return TextEditingValue(
       text: formattedText,

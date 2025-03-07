@@ -59,7 +59,7 @@ class _AddStockScreenState extends State<AddStockScreen> {
               ElevatedButton(
                 onPressed: _submitForm,
                 child: const Text('Adicionar Ação'),
-              )
+              ),
             ],
           ),
         ),
@@ -72,8 +72,7 @@ class _AddStockScreenState extends State<AddStockScreen> {
       try {
         final newStock = StockModel(
           ticker: _tickerController.text.toUpperCase(),
-          dividendYield:
-              double.parse(_dividendYieldController.text.replaceAll(',', '.')),
+          dividendYield: double.parse(_dividendYieldController.text.replaceAll(',', '.')),
           investedAmount: parseCurrency(_investedAmountController.text),
           currentPrice: parseCurrency(_currentPriceController.text),
         );
@@ -82,9 +81,11 @@ class _AddStockScreenState extends State<AddStockScreen> {
 
         if (mounted) Navigator.pop(context);
       } catch (e) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Erro ao adicionar a ação: $e')),
-        );
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Erro ao adicionar a ação: $e')),
+          );
+        }
       }
     }
   }

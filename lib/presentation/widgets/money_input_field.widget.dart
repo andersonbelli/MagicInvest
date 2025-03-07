@@ -4,8 +4,11 @@ import 'package:flutter/services.dart';
 import '../../shared/formatters/currency_formatter.dart';
 
 class MoneyInputField extends StatelessWidget {
-  const MoneyInputField(
-      {super.key, required this.controller, this.label = 'Valor'});
+  const MoneyInputField({
+    super.key,
+    required this.controller,
+    this.label = 'Valor',
+  });
 
   final TextEditingController controller;
   final String label;

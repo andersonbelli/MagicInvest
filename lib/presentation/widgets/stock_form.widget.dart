@@ -33,20 +33,23 @@ class StockForm extends StatelessWidget {
           inputFormatters: [
             FilteringTextInputFormatter.allow(RegExp(r'[\d,.]')),
             TextInputFormatter.withFunction((oldValue, newValue) {
-              String newText = newValue.text.replaceAll(',', '.');
+              final String newText = newValue.text.replaceAll(',', '.');
               return TextEditingValue(
                 text: newText,
                 selection: TextSelection.collapsed(offset: newText.length),
               );
             }),
           ],
-          validator: (value) =>
-              value!.isEmpty ? 'Digite o Dividend Yield' : null,
+          validator: (value) => value!.isEmpty ? 'Digite o Dividend Yield' : null,
         ),
         MoneyInputField(
-            controller: investedAmountController, label: 'Investido'),
+          controller: investedAmountController,
+          label: 'Investido',
+        ),
         MoneyInputField(
-            controller: currentPriceController, label: 'Preço Atual'),
+          controller: currentPriceController,
+          label: 'Preço Atual',
+        ),
       ],
     );
   }
